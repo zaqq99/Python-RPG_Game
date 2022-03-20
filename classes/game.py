@@ -123,9 +123,9 @@ class Person:
             current_hp = hp_string
 
         print(
-            '                       __________________________________________________')
-        print(bcolors.BOLD + self.name + '   ' + current_hp + '  |'+bcolors.FAIL +
-              hp_bar + bcolors.ENDC + bcolors.BOLD + '|')
+            '                         __________________________________________________')
+        print(bcolors.BOLD + self.name + '   ' + current_hp + '  |' + bcolors.ENDC + bcolors.FAIL +
+              hp_bar + bcolors.ENDC + bcolors.BOLD + '|' + bcolors.ENDC)
 
 # Tworzenie przejrzystych wartości dla życia i many
 

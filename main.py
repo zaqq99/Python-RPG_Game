@@ -4,6 +4,9 @@ from classes.magic import Spell
 from classes.inventory import Item
 import random
 
+defeated_enemies = 0
+defeated_players = 0
+
 # Tworzenie zaklęć
 fireball = Spell('Fireball', 25, 300, 'Pyromancy')
 thunder = Spell('Thunder Strike', 60, 220, 'Aeromancy')
@@ -41,14 +44,14 @@ player_items = [{'item': lesser_potion, 'quantity': 15},
                 {'item': grenade, 'quantity': 5}]
 
 # Tworzenie postaci
-player1 = Person('Zaqq  :', 3260, 565, 160, 34, player_magic, player_items)
-player2 = Person('Kika  :', 2260, 105, 402, 34, player_magic, player_items)
-player3 = Person('Chucky:', 3510, 265, 320, 34, player_magic, player_items)
+player1 = Person('Zaqq  :', 231, 565, 160, 34, player_magic, player_items)
+player2 = Person('Kika  :', 226, 105, 402, 34, player_magic, player_items)
+player3 = Person('Chucky:', 351, 265, 320, 34, player_magic, player_items)
 
 # Tworzenie przeciwników
-enemy1 = Person('Bandit ', 18200, 125, 445, 25, enemy_magic, [])
-enemy2 = Person('Assasin', 8200, 165, 845, 225, enemy_magic, [])
-enemy3 = Person('Bowman', 1200, 165, 645, 125, enemy_magic, [])
+enemy1 = Person('Bandit :', 18200, 125, 445, 25, enemy_magic, [])
+enemy2 = Person('Assasin:', 8200, 165, 845, 225, enemy_magic, [])
+enemy3 = Person('Bowman :', 1200, 165, 645, 125, enemy_magic, [])
 
 players = [player1, player2, player3]
 enemies = [enemy1, enemy2, enemy3]
@@ -63,7 +66,7 @@ while running:
     print('=======================')
 
     print('\n')
-    print('NAME                         HP                             MP')
+    print('NAME                            HP                               MP')
     for player in players:
         player.get_stats()
 
@@ -86,6 +89,9 @@ while running:
                   'points of damage.')
             if enemies[enemy].get_hp() == 0:
                 print(enemies[enemy].name + ' has died.')
+                #
+                print('defeated enemies', defeated_enemies)
+                defeated_enemies += 1
                 del enemies[enemy]
 
         # Wybór magii
@@ -120,6 +126,9 @@ while running:
 
                 if enemies[enemy].get_hp() == 0:
                     print(enemies[enemy].name + ' has died.')
+                    #
+                    print('defeated enemies', defeated_enemies)
+                    defeated_enemies += 1
                     del enemies[enemy]
         elif index == 2:
             player.choose_item()
@@ -162,11 +171,14 @@ while running:
 
                 if enemies[enemy].get_hp() == 0:
                     print(enemies[enemy].name.replace(' ', '') + ' has died.')
+                    #
+                    defeated_enemies += 1
+                    print('defeated enemies', defeated_enemies)
                     del enemies[enemy]
 
 # Sprawdzenie czy dalej toczymy walke
-    defeated_enemies = 0
-    defeated_players = 0
+    #defeated_enemies = 0
+    #defeated_players = 0
 
     for enemy in enemies:
         if enemy.get_hp() == 0:
@@ -185,14 +197,15 @@ while running:
         running = False
 # Tura przeciwników
     for enemy in enemies:
-        enemy_choice = random.randrange(0, 2)
+        enemy_choice = random.randrange(0, 1)
         if enemy_choice == 0:
             target = random.randrange(0, 3)
             enemy_dmg = enemy.atk_generator()
 
             players[target].take_damage(enemy_dmg)
-            print(enemy.name.replace(' ', '') + ' attacks ' +
+            print('\n'+enemy.name.replace(' ', '') + ' attacks ' +
                   players[target].name.replace(' ', '') + ' for', enemy_dmg)
+# !!!!!!! Magia jest do poprawy
         elif enemy_choice == 1:
             spell, magic_dmg = enemy.choose_enemy_spell()
             enemy.reduce_mp(spell.cost)
@@ -210,7 +223,7 @@ while running:
                 print(bcolors.OKBLUE + enemy.name.replace(' ', '') + "'s " + spell.name + ' deals ' +
                       str(magic_dmg) + ' to ' + players[target].name.replace(' ', '')+bcolors.ENDC)
 
-                if players[target].get_hp() == 0:
-                    print(players[target].name + ' has died.')
+                if players[target].get_hp() <= 0:
+                    print('\n'+players[target].name + ' has died.')
                     del players[player]
             #print('Enemy chose', spell, 'damage is', magic_dmg)
